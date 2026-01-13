@@ -10,6 +10,9 @@ on:
       - 'action.yml'
       - 'dist/index.js'
 
+permissions:
+  contents: read
+
 jobs:
   manage-areas:
     runs-on: ubuntu-latest
