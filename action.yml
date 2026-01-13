@@ -1,0 +1,11 @@
+name: 'Areas Action'
+description: 'Manage code areas ownership, PR reviews, and labeling.'
+author: 'Coveo'
+inputs:
+  token:
+    description: 'GitHub Token'
+    required: true
+    default: ${{ github.token }}
+runs:
+  using: 'node20'
+  main: 'dist/index.js'
