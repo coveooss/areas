@@ -1,0 +1,39 @@
+name: Check changeset
+
+on:
+  pull_request: ~
+
+permissions:
+  contents: read
+
+jobs:
+  check-changeset:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for changeset
+        run: |
+          # Get list of changed files
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+
+          # Check if changeset exists
+          HAS_CHANGESET=$(echo "$CHANGED_FILES" | grep -E '^\.changeset/.*\.md$' | grep -v 'README.md' || true)
+
+          # Check if there are code changes (excluding docs, config, etc.)
+          HAS_CODE_CHANGES=$(echo "$CHANGED_FILES" | grep -vE '^(\.github/|\.changeset/|docs/|README|CONTRIBUTING|AGENTS|LICENSE|\.md$)' || true)
+
+          if [ -n "$HAS_CHANGESET" ]; then
+            echo "✓ Changeset found"
+          elif [ -z "$HAS_CODE_CHANGES" ]; then
+            echo "✓ No code changes, changeset not required"
+          else
+            echo "::warning::No changeset found. If this PR includes user-facing changes, run 'pnpm changeset' to add one."
+          fi
