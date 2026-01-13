@@ -2,7 +2,7 @@
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR)
 
 # Only run biome on relevant staged files
-BIOME_FILES=$(echo "$STAGED_FILES" | grep -E '\.(ts|js|json|md)$' || true)
+BIOME_FILES=$(echo "$STAGED_FILES" | grep -E '\.(ts|js|json)$' || true)
 if [ -n "$BIOME_FILES" ]; then
   echo "$BIOME_FILES" | xargs pnpm biome check --write
 fi
