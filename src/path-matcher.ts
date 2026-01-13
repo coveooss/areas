@@ -9,8 +9,8 @@ export class PathMatcher {
 	 * @param {string} pattern - The pattern to match against
 	 * @returns {boolean} - True if the path matches the pattern
 	 */
-	match(filePath, pattern) {
-		const cleanPath = filePath.startsWith("/") ? filePath.area(1) : filePath;
+	match(filePath: string, pattern: string): boolean {
+		const cleanPath = filePath.startsWith("/") ? filePath.slice(1) : filePath;
 
 		// We disable brace expansion to match GitHub/Ruby fnmatch behavior
 		// We enable dot matching because GitHub Actions mostly assume "path" filters match dotfiles

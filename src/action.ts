@@ -10,7 +10,7 @@ async function run() {
 	try {
 		const token = core.getInput("token", { required: true });
 		const workingDirectory = core.getInput("working-directory") || ".";
-		const command = core.getInput("command") || "ruleset-sync";
+		const command = core.getInput("command", { required: true });
 		const areasDir = path.join(workingDirectory, ".areas");
 
 		const octokit = github.getOctokit(token);

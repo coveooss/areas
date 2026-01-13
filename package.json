@@ -4,8 +4,11 @@
   "description": "Manage and label areas in your repository based on the .areas configuration.",
   "main": "index.js",
   "scripts": {
-    "build": "ncc build src/index.ts -o dist",
-    "test": "jest",
+    "build": "ncc build src/action.ts -o dist",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "vitest run --config vitest.e2e.config.ts",
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write **/*.ts"
   },
@@ -15,16 +18,22 @@
   "packageManager": "pnpm@10.28.0",
   "dependencies": {
     "@actions/core": "^2.0.2",
-    "@actions/github": "^7.0.0"
+    "@actions/github": "^7.0.0",
+    "fs-extra": "^11.3.3",
+    "glob": "^13.0.0",
+    "js-yaml": "^4.1.1",
+    "minimatch": "^10.1.1"
   },
   "devDependencies": {
-    "@types/jest": "^30.0.0",
+    "@types/fs-extra": "^11.0.4",
+    "@types/js-yaml": "^4.0.9",
+    "@types/minimatch": "^6.0.0",
     "@types/node": "^25.0.7",
     "@vercel/ncc": "^0.38.4",
+    "@vitest/coverage-v8": "^4.0.17",
     "eslint": "^9.39.2",
-    "jest": "^30.2.0",
     "prettier": "^3.7.4",
-    "ts-jest": "^29.4.6",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.17"
   }
 }
