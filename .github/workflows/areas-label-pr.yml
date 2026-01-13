@@ -15,8 +15,8 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
-      # - name: Label PR
-      #   uses: ./.github/actions/areas
-      #   with:
-      #     token: ${{ secrets.DEV_TOKEN }}
-      #     command: label-pr
+      - name: Label PR
+        uses: .
+        with:
+          token: ${{ secrets.DEV_TOKEN }}
+          command: label-pr
