@@ -42,20 +42,35 @@ jobs:
           title: 'chore: release'
           commit: 'chore: release'
           version: pnpm changeset version
-          publish: pnpm build
-          createGithubReleases: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Update major version tag
-        if: steps.changesets.outputs.published == 'true'
+      - name: Create release
+        if: steps.changesets.outputs.published
         run: |
-          # Get the published version from package.json
+          # Get the version from package.json
           VERSION=$(node -p "require('./package.json').version")
-          MAJOR=$(echo "$VERSION" | cut -d. -f1)
 
+          # Check if this version tag already exists (release already done)
+          if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+            echo "Release v$VERSION already exists, skipping"
+            exit 0
+          fi
+
+          # Create the release tag
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "v$VERSION" -m "Release v$VERSION"
+          git push origin "v$VERSION"
+
+          # Update major version tag
+          MAJOR=$(echo "$VERSION" | cut -d. -f1)
           git tag -fa "v$MAJOR" -m "Update v$MAJOR tag to v$VERSION"
           git push origin "v$MAJOR" --force
-          echo "Updated v$MAJOR tag to point to v$VERSION"
+
+          echo "Released v$VERSION and updated v$MAJOR tag"
+
+          # Create GitHub release
+          gh release create "v$VERSION" --generate-notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
