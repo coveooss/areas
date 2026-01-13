@@ -1,0 +1,43 @@
+name: Build action
+on:
+  pull_request: ~
+
+permissions:
+  contents: read
+
+jobs:
+  check-dist:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Install pnpm
+        run: npm install -g pnpm@10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6
+        with:
+          node-version: 24
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Rebuild the action
+        run: pnpm run build
+
+      - name: Check for changes
+        run: |
+          if [ -n "$(git status --porcelain dist/index.js)" ]; then
+            echo "Error: dist/index.js is out of sync. Please run 'pnpm run build' and commit the changes."
+            git status --porcelain dist/index.js
+            exit 1
+          else
+            echo "dist/index.js is up-to-date."
+          fi

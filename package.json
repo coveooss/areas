@@ -1,7 +1,7 @@
 {
   "name": "areas",
   "version": "1.0.0",
-  "description": "",
+  "description": "Manage and label areas in your repository based on the .areas configuration.",
   "main": "index.js",
   "scripts": {
     "build": "ncc build src/index.ts -o dist",

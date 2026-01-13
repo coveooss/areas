@@ -1,11 +1,16 @@
-name: 'Areas Action'
-description: 'Manage code areas ownership, PR reviews, and labeling.'
-author: 'Coveo'
+name: 'Areas'
+description: 'Manage repository areas'
 inputs:
   token:
     description: 'GitHub Token'
     required: true
-    default: ${{ github.token }}
+  command:
+    description: 'Command to run (ruleset-sync or label-pr)'
+    required: true
+  working-directory:
+    description: 'Working directory containing .areas folder'
+    required: false
+    default: '.'
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'dist/index.js'

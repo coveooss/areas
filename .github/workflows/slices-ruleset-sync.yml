@@ -1,0 +1,28 @@
+name: Update Area Rulesets
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.areas/**'
+      - '.github/workflows/areas-ruleset-sync.yml'
+      - 'action.yml'
+      - 'dist/index.js'
+
+jobs:
+  manage-areas:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      # - name: Sync Area Rulesets
+      #   uses: .
+      #   with:
+      #     token: ${{ secrets.DEV_TOKEN }}
+      #     command: ruleset-sync

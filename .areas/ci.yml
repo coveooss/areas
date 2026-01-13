@@ -1,0 +1,8 @@
+description: Continuous Integration Workflows
+reviewers:
+  glowing-potato-admins:
+    minimum_approvals: 1
+review_bypass:
+  dxui-vets: pull_request
+file_patterns:
+  - '.github/workflows/ci-*.yml'
