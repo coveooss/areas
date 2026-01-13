@@ -60,13 +60,12 @@ export class LabelManager {
 	}
 
 	async updateLabels(prNumber, desiredLabels) {
-		const currentLabelsResponse = await this.octokit.rest.issues.listLabelsOnIssue(
-			{
+		const currentLabelsResponse =
+			await this.octokit.rest.issues.listLabelsOnIssue({
 				owner: this.owner,
 				repo: this.repo,
 				issue_number: prNumber,
-			},
-		);
+			});
 
 		const currentLabels = currentLabelsResponse.data.map((l) => l.name);
 		const currentAreaLabels = currentLabels.filter(
@@ -87,7 +86,7 @@ export class LabelManager {
 			console.log("No label changes needed.");
 		}
 
-        if (labelsToAdd.length > 0) {
+		if (labelsToAdd.length > 0) {
 			console.log(`Adding labels: ${labelsToAdd.join(", ")}`);
 			await this.octokit.rest.issues.addLabels({
 				owner: this.owner,

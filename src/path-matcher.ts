@@ -4,7 +4,7 @@ export class PathMatcher {
 	/**
 	 * Matches a file path against a pattern using GitHub-compatible behavior.
 	 * GitHub Rulesets use Ruby's File.fnmatch with FNM_PATHNAME.
-	 * 
+	 *
 	 * @param {string} filePath - The file path to check
 	 * @param {string} pattern - The pattern to match against
 	 * @returns {boolean} - True if the path matches the pattern

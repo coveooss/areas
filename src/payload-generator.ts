@@ -45,7 +45,7 @@ export class PayloadGenerator {
 						actor_id: bypass.team_id,
 						actor_type: "Team",
 						bypass_mode: bypass.mode,
-				  }))
+					}))
 				: [],
 		};
 	}

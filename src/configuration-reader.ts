@@ -30,7 +30,9 @@ export class ConfigurationReader {
 			console.log(`Processing area config: ${file}`);
 
 			if (config.reviewers) {
-				for (const [teamSlug, reviewerConfig] of Object.entries(config.reviewers)) {
+				for (const [teamSlug, reviewerConfig] of Object.entries(
+					config.reviewers,
+				)) {
 					const hydratedConfig = reviewerConfig || { minimum_approvals: 0 };
 					const teamId = await this.teamResolver.resolveTeamId(teamSlug);
 					hydratedConfig.team_id = teamId;
