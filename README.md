@@ -1,11 +1,19 @@
 # Areas GitHub Action
 
+[![CI](https://github.com/coveo/areas/actions/workflows/ci-build.yml/badge.svg)](https://github.com/coveo/areas/actions/workflows/ci-build.yml)
+
 This action manages "Areas" of your repository—logical portions of the codebase defined by file patterns (e.g., "Atomic", "Documentation"). 
 
 It uses these areas to:
 
 1.  **Enforce Review Rules:** Automatically configure GitHub Repository Rulesets to require team reviews.
 2.  **Label Pull Requests:** Automatically apply `area:<name>` and `team:<slug>` labels to PRs based on changed files.
+
+## Quick Start
+
+1. Create a `.areas/` directory in your repository
+2. Add area configuration files (see [Configuration](#configuration))
+3. Set up the GitHub workflows (see [Usage](#usage))
 
 ## Configuration
 
@@ -42,7 +50,7 @@ See [GitHub's documentation](https://docs.github.com/en/repositories/configuring
 | Input | Description | Required | Default |
 | :--- | :--- | :--- | :--- |
 | `token` | GitHub Token (PAT with `administration:write`, `members:read`, `contents:read`, `pull_requests:write`, `issues:write`). | `true` | N/A |
-| `command` | The mode to run: `ruleset-sync` or `label-pr`. | `false` | `ruleset-sync` |
+| `command` | The mode to run: `ruleset-sync` or `label-pr`. | `true` | N/A |
 | `working-directory` | Path containing the `.areas` folder. | `false` | `.` |
 
 ## Usage
@@ -51,13 +59,48 @@ See [GitHub's documentation](https://docs.github.com/en/repositories/configuring
 
 Keeps GitHub Rulesets in sync with your `.areas/*.yaml` configuration when pushed to `main`.
 
-See [`.github/workflows/areas-ruleset-sync.yml`](/.github/workflows/areas-ruleset-sync.yml)
+```yaml
+# .github/workflows/areas-ruleset-sync.yml
+name: Sync Area Rulesets
+
+on:
+  push:
+    branches: [main]
+    paths: ['.areas/**']
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: coveo/areas@v1
+        with:
+          token: ${{ secrets.AREAS_TOKEN }}
+          command: ruleset-sync
+```
 
 ### 2. Auto-Label PRs
 
 Labels PRs with affected areas and teams.
 
-See [`.github/workflows/areas-label-pr.yml`](/.github/workflows/areas-label-pr.yml)
+```yaml
+# .github/workflows/areas-label-pr.yml
+name: Label PR with Areas
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: coveo/areas@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          command: label-pr
+```
 
 ## Why rulesets?
 
@@ -72,3 +115,13 @@ See this [discussion announcement](https://github.com/orgs/community/discussions
 *   **Components first:** The semantics is first on the component, not the team.
 *   **Co-ownerships:** Components can have multiple stewards.
 *   **Long-lived:** Teams change over time, but components are more stable.
+
+## Development
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
+
+For AI coding assistants, see [AGENTS.md](AGENTS.md) for codebase context.
+
+## License
+
+ISC

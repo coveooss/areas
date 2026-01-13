@@ -1,13 +1,19 @@
-name: Build action
-on:
-  pull_request: ~
+name: Release
 
-permissions:
-  contents: read
+on:
+  push:
+    branches:
+      - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  check-dist:
+  release:
+    name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
@@ -29,15 +35,11 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Rebuild the action
-        run: pnpm run build
-
-      - name: Check for changes
-        run: |
-          if [ -n "$(git status --porcelain dist/index.js)" ]; then
-            echo "Error: dist/index.js is out of sync. Please run 'pnpm run build' and commit the changes."
-            git status --porcelain dist/index.js
-            exit 1
-          else
-            echo "dist/index.js is up-to-date."
-          fi
+      - name: Create Release Pull Request
+        uses: changesets/action@v1
+        with:
+          title: 'chore: release'
+          commit: 'chore: release'
+          version: pnpm changeset version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

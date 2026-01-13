@@ -1,6 +1,6 @@
 {
 	"name": "areas",
-	"version": "1.0.0",
+	"version": "0.0.1",
 	"description": "Manage and label areas in your repository based on the .areas configuration.",
 	"main": "index.js",
 	"scripts": {
@@ -12,7 +12,9 @@
 		"lint": "biome check .",
 		"lint:fix": "biome check --write .",
 		"format": "biome format --write .",
-		"prepare": "husky"
+		"prepare": "husky",
+		"changeset": "changeset",
+		"version": "changeset version"
 	},
 	"keywords": [],
 	"author": "",
@@ -28,6 +30,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.3.11",
+		"@changesets/cli": "^2.29.8",
 		"@types/fs-extra": "^11.0.4",
 		"@types/js-yaml": "^4.0.9",
 		"@types/node": "^25.0.7",

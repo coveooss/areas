@@ -14,7 +14,10 @@ interface TestCase {
 }
 
 describe("Path Matcher", () => {
-	const fixturesPath = path.join(__dirname, "path_matcher_fixtures.json");
+	const fixturesPath = path.join(
+		__dirname,
+		"../fixtures/path_matcher_fixtures.json",
+	);
 	const fixtures: TestCase[] = JSON.parse(
 		fs.readFileSync(fixturesPath, "utf8"),
 	);
