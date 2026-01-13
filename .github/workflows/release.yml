@@ -46,7 +46,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create release
-        if: steps.changesets.outputs.published
+        if: steps.changesets.outputs.published && steps.changesets.outputs.hasChangesets
         run: |
           # Get the version from package.json
           VERSION=$(node -p "require('./package.json').version")
