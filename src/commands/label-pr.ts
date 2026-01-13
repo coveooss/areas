@@ -1,7 +1,14 @@
 import * as github from "@actions/github";
+import type { ConfigurationReader } from "../configuration-reader.js";
 import { LabelManager } from "../label-manager.js";
+import type { Octokit } from "../types.js";
 
-export async function labelPr(octokit, owner, repo, configurationReader) {
+export async function labelPr(
+	octokit: Octokit,
+	owner: string,
+	repo: string,
+	configurationReader: ConfigurationReader,
+): Promise<void> {
 	if (!github.context.payload.pull_request) {
 		throw new Error(
 			"The 'label-pr' command must be run in the context of a pull_request",

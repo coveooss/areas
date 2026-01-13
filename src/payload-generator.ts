@@ -1,6 +1,9 @@
+import type { AreaConfig, RulesetPayload } from "./types.js";
+
 export class PayloadGenerator {
-	generate(config, repository) {
-		const requiredReviewers = [];
+	generate(config: AreaConfig, repository: string): RulesetPayload {
+		const requiredReviewers: RulesetPayload["rules"][0]["parameters"]["required_reviewers"] =
+			[];
 
 		if (config.reviewers) {
 			requiredReviewers.push(
@@ -17,10 +20,10 @@ export class PayloadGenerator {
 
 		return {
 			name: `area:${config.name}`,
-			target: "branch",
+			target: "branch" as const,
 			source_type: "Repository",
 			source: repository,
-			enforcement: "active",
+			enforcement: "active" as const,
 			conditions: {
 				ref_name: {
 					exclude: [],
@@ -29,9 +32,9 @@ export class PayloadGenerator {
 			},
 			rules: [
 				{
-					type: "pull_request",
+					type: "pull_request" as const,
 					parameters: {
-						required_approving_review_count: 0, // Base requirement is 0, specific teams add on top
+						required_approving_review_count: 0,
 						dismiss_stale_reviews_on_push: false,
 						require_code_owner_review: false,
 						require_last_push_approval: false,
@@ -43,7 +46,7 @@ export class PayloadGenerator {
 			bypass_actors: config.review_bypass
 				? Object.values(config.review_bypass).map((bypass) => ({
 						actor_id: bypass.team_id,
-						actor_type: "Team",
+						actor_type: "Team" as const,
 						bypass_mode: bypass.mode,
 					}))
 				: [],

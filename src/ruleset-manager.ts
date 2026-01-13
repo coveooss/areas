@@ -1,19 +1,25 @@
+import type { Octokit, Ruleset, RulesetPayload } from "./types.js";
+
 export class RulesetManager {
-	constructor(octokit, owner, repo) {
+	private octokit: Octokit;
+	private owner: string;
+	private repo: string;
+
+	constructor(octokit: Octokit, owner: string, repo: string) {
 		this.octokit = octokit;
 		this.owner = owner;
 		this.repo = repo;
 	}
 
-	async getRulesets() {
+	async getRulesets(): Promise<Ruleset[]> {
 		const response = await this.octokit.rest.repos.getRepoRulesets({
 			owner: this.owner,
 			repo: this.repo,
 		});
-		return response.data;
+		return response.data as Ruleset[];
 	}
 
-	async deleteRuleset(rulesetId) {
+	async deleteRuleset(rulesetId: number): Promise<void> {
 		await this.octokit.rest.repos.deleteRepoRuleset({
 			owner: this.owner,
 			repo: this.repo,
@@ -22,7 +28,7 @@ export class RulesetManager {
 		console.log(`Deleted ruleset ID: ${rulesetId}`);
 	}
 
-	async createOrUpdateRuleset(payload) {
+	async createOrUpdateRuleset(payload: RulesetPayload): Promise<void> {
 		const rulesets = await this.getRulesets();
 
 		const existingRuleset = rulesets.find((r) => r.name === payload.name);

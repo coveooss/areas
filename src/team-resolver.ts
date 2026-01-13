@@ -1,10 +1,15 @@
+import type { Octokit } from "./types.js";
+
 export class TeamResolver {
-	constructor(octokit, org) {
+	private octokit: Octokit;
+	private org: string;
+
+	constructor(octokit: Octokit, org: string) {
 		this.octokit = octokit;
 		this.org = org;
 	}
 
-	async resolveTeamId(teamSlug) {
+	async resolveTeamId(teamSlug: string): Promise<number> {
 		try {
 			const response = await this.octokit.rest.teams.getByName({
 				org: this.org,

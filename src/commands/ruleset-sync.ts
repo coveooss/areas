@@ -1,13 +1,22 @@
+import type { ConfigurationReader } from "../configuration-reader.js";
 import { PayloadGenerator } from "../payload-generator.js";
 import { RulesetManager } from "../ruleset-manager.js";
+import type { AreaConfig, Octokit } from "../types.js";
 
-export async function rulesetSync(octokit, owner, repo, configurationReader) {
+export async function rulesetSync(
+	octokit: Octokit,
+	owner: string,
+	repo: string,
+	configurationReader: ConfigurationReader,
+): Promise<void> {
 	const payloadGenerator = new PayloadGenerator();
 	const rulesetManager = new RulesetManager(octokit, owner, repo);
 
 	// Read area configurations
 	const configs = await configurationReader.readConfigurations();
-	const activeAreaNames = new Set(configs.map((c) => `area:${c.name}`));
+	const activeAreaNames = new Set(
+		configs.map((c: AreaConfig) => `area:${c.name}`),
+	);
 
 	// Delete stale rulesets
 	try {
@@ -26,9 +35,10 @@ export async function rulesetSync(octokit, owner, repo, configurationReader) {
 			}
 		}
 	} catch (error) {
+		const message = error instanceof Error ? error.message : String(error);
 		console.warn(
 			"Failed to clean up stale rulesets (likely due to permissions or API error):",
-			error.message,
+			message,
 		);
 	}
 

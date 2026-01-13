@@ -1,1 +1,3 @@
 pnpm biome check --staged --no-errors-on-unmatched --write
+pnpm build
+git add dist/

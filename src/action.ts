@@ -27,7 +27,8 @@ async function run() {
 			core.setFailed(`Unknown command: ${command}`);
 		}
 	} catch (error) {
-		core.setFailed(error.message);
+		const message = error instanceof Error ? error.message : String(error);
+		core.setFailed(message);
 	}
 }
 

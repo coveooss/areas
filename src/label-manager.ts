@@ -1,20 +1,26 @@
 import { PathMatcher } from "./path-matcher.js";
+import type { AreaConfig, Octokit } from "./types.js";
 
 export class LabelManager {
-	constructor(octokit, owner, repo) {
+	private octokit: Octokit;
+	private owner: string;
+	private repo: string;
+	private pathMatcher: PathMatcher;
+
+	constructor(octokit: Octokit, owner: string, repo: string) {
 		this.octokit = octokit;
 		this.owner = owner;
 		this.repo = repo;
 		this.pathMatcher = new PathMatcher();
 	}
 
-	async processPR(prNumber, configs) {
+	async processPR(prNumber: number, configs: AreaConfig[]): Promise<void> {
 		console.log(`Processing PR #${prNumber}`);
 
 		const changedFiles = await this.getChangedFiles(prNumber);
 		console.log(`Found ${changedFiles.length} changed files`);
 
-		const desiredLabels = new Set();
+		const desiredLabels = new Set<string>();
 		for (const config of configs) {
 			if (this.isAreaMatched(config, changedFiles)) {
 				console.log(`Matched area: ${config.name}`);
@@ -30,7 +36,7 @@ export class LabelManager {
 		await this.updateLabels(prNumber, desiredLabels);
 	}
 
-	async getChangedFiles(prNumber) {
+	async getChangedFiles(prNumber: number): Promise<string[]> {
 		return await this.octokit.paginate(
 			this.octokit.rest.pulls.listFiles,
 			{
@@ -43,7 +49,7 @@ export class LabelManager {
 		);
 	}
 
-	isAreaMatched(config, changedFiles) {
+	isAreaMatched(config: AreaConfig, changedFiles: string[]): boolean {
 		if (!config.file_patterns || config.file_patterns.length === 0) {
 			return false;
 		}
@@ -59,7 +65,10 @@ export class LabelManager {
 		return false;
 	}
 
-	async updateLabels(prNumber, desiredLabels) {
+	async updateLabels(
+		prNumber: number,
+		desiredLabels: Set<string>,
+	): Promise<void> {
 		const currentLabelsResponse =
 			await this.octokit.rest.issues.listLabelsOnIssue({
 				owner: this.owner,
