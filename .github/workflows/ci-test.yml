@@ -1,4 +1,4 @@
-name: Build action
+name: Test
 on:
   push:
     branches: [main]
@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 jobs:
-  check-dist:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -31,15 +31,5 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Rebuild the action
-        run: pnpm run build
-
-      - name: Check for changes
-        run: |
-          if [ -n "$(git status --porcelain dist/index.js)" ]; then
-            echo "Error: dist/index.js is out of sync. Please run 'pnpm run build' and commit the changes."
-            git status --porcelain dist/index.js
-            exit 1
-          else
-            echo "dist/index.js is up-to-date."
-          fi
+      - name: Test
+        run: pnpm test

@@ -35,11 +35,27 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Create Release Pull Request
+      - name: Create Release Pull Request or Publish
+        id: changesets
         uses: changesets/action@v1
         with:
           title: 'chore: release'
           commit: 'chore: release'
           version: pnpm changeset version
+          publish: pnpm build
+          createGithubReleases: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update major version tag
+        if: steps.changesets.outputs.published == 'true'
+        run: |
+          # Get the published version from package.json
+          VERSION=$(node -p "require('./package.json').version")
+          MAJOR=$(echo "$VERSION" | cut -d. -f1)
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -fa "v$MAJOR" -m "Update v$MAJOR tag to v$VERSION"
+          git push origin "v$MAJOR" --force
+          echo "Updated v$MAJOR tag to point to v$VERSION"
