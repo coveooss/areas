@@ -98,9 +98,10 @@ This creates a markdown file in `.changeset/` that should be committed with your
 
 ### 4. Commit and Push
 
-The pre-commit hook will automatically:
-- Run Biome to lint and format staged files
-- Build the action and stage `dist/`
+The pre-commit hook will:
+- Auto-fix formatting/linting issues with Biome
+- Rebuild the action (`dist/`)
+- **Fail if any changes were made** — stage the changes and commit again
 
 ```bash
 git add .

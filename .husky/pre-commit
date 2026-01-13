@@ -1,3 +1,32 @@
-pnpm biome check --staged --no-errors-on-unmatched --write
-pnpm build
-git add dist/
+# Get list of staged files before running fixes
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR)
+
+# Only run biome on relevant staged files
+BIOME_FILES=$(echo "$STAGED_FILES" | grep -E '\.(ts|js|json|md)$' || true)
+if [ -n "$BIOME_FILES" ]; then
+  echo "$BIOME_FILES" | xargs pnpm biome check --write
+fi
+
+# Only run build if source files changed
+if echo "$STAGED_FILES" | grep -qE '^(src/|package\.json|tsconfig\.json)'; then
+  pnpm build
+fi
+
+# Check if any originally staged files (or dist/) now have unstaged changes
+CHANGED_STAGED=""
+for file in $STAGED_FILES; do
+  if ! git diff --quiet -- "$file" 2>/dev/null; then
+    CHANGED_STAGED="$CHANGED_STAGED $file"
+  fi
+done
+
+if ! git diff --quiet -- dist/; then
+  CHANGED_STAGED="$CHANGED_STAGED dist/"
+fi
+
+if [ -n "$CHANGED_STAGED" ]; then
+  echo ""
+  echo "Error: Pre-commit hook modified files. Please stage and commit again:"
+  echo "$CHANGED_STAGED" | tr ' ' '\n' | grep -v '^$'
+  exit 1
+fi
