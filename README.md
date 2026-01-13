@@ -75,9 +75,13 @@ jobs:
       - uses: actions/checkout@v4
       - uses: coveo/areas@v1
         with:
-          token: ${{ secrets.AREAS_TOKEN }}
+          token: ${{ secrets.TOKEN }}
           command: ruleset-sync
 ```
+
+Required permissions:
+- Repository: Contents read
+- Repository: Admin write
 
 ### 2. Auto-Label PRs
 
@@ -101,6 +105,11 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           command: label-pr
 ```
+
+Required permissions:
+- Repository: Contents: read
+- Repository: Pull Requests: write
+- Organization: Members: read
 
 ## Why rulesets?
 
