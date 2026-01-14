@@ -1,5 +1,0 @@
----
-"areas": patch
----
-
-Initial release
