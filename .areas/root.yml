@@ -1,0 +1,9 @@
+description: Root configuration files
+file_patterns:
+  - biome.json
+  - package.json
+  - renovate.json5
+  - tsconfig.json
+  - vitest.config.js
+  - vitest.*.config.js
+  - .husky/**

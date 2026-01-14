@@ -1,0 +1,128 @@
+[
+	{
+		"description": "9. Leading Slash",
+		"pattern": "**/*.js",
+		"path": "/src/foo.js",
+		"match": true
+	},
+	{
+		"description": "8. Hidden Files (Dotfiles)",
+		"pattern": "**/*.js",
+		"path": ".github/scripts/test.js",
+		"match": true
+	},
+	{
+		"description": "1. Basic Wildcard (*)",
+		"pattern": "*",
+		"path": "foo",
+		"match": true
+	},
+	{
+		"description": "1. Basic Wildcard (*)",
+		"pattern": "*",
+		"path": "foo/bar",
+		"match": false
+	},
+	{
+		"description": "1. Basic Wildcard (*)",
+		"pattern": "*",
+		"path": ".foo",
+		"match": true
+	},
+	{
+		"description": "2. Recursive Wildcard (**)",
+		"pattern": "**/*.js",
+		"path": "foo.js",
+		"match": true
+	},
+	{
+		"description": "2. Recursive Wildcard (**)",
+		"pattern": "**/*.js",
+		"path": "src/foo.js",
+		"match": true
+	},
+	{
+		"description": "2. Recursive Wildcard (**)",
+		"pattern": "**/*.js",
+		"path": "src/nested/deep/foo.js",
+		"match": true
+	},
+	{
+		"description": "3. Path Separators",
+		"pattern": "src/*",
+		"path": "src/foo",
+		"match": true
+	},
+	{
+		"description": "3. Path Separators",
+		"pattern": "src/*",
+		"path": "src/nested/foo",
+		"match": false
+	},
+	{
+		"description": "4. Characters",
+		"pattern": "src/foo?.js",
+		"path": "src/foo1.js",
+		"match": true
+	},
+	{
+		"description": "4. Characters",
+		"pattern": "src/foo?.js",
+		"path": "src/foo.js",
+		"match": false
+	},
+	{
+		"description": "4. Characters",
+		"pattern": "src/foo?.js",
+		"path": "src/foo12.js",
+		"match": false
+	},
+	{
+		"description": "5. Extension Matching",
+		"pattern": "**/*.ts",
+		"path": "foo.ts",
+		"match": true
+	},
+	{
+		"description": "5. Extension Matching",
+		"pattern": "**/*.ts",
+		"path": "foo.tsx",
+		"match": false
+	},
+	{
+		"description": "6. Unsupported: Brace Expansion",
+		"pattern": "**/*.{rb,ts}",
+		"path": "src/foo.rb",
+		"match": false
+	},
+	{
+		"description": "6. Unsupported: Brace Expansion",
+		"pattern": "**/*.{rb,ts}",
+		"path": "src/foo.ts",
+		"match": false
+	},
+	{
+		"description": "6. Unsupported: Brace Expansion",
+		"pattern": "**/*.{rb,ts}",
+		"path": "src/foo.{rb,ts}",
+		"match": true
+	},
+	{
+		"description": "7. Dotfiles",
+		"pattern": ".*",
+		"path": ".gitignore",
+		"match": true
+	},
+	{
+		"description": "7. Dotfiles",
+		"pattern": ".github/**/*",
+		"path": ".github/workflows/ci.yml",
+		"match": true
+	},
+	{
+		"description": "7. Dotfiles",
+		"pattern": "*",
+		"path": ".gitignore",
+		"match": true
+	}
+]

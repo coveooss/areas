@@ -1,0 +1,4 @@
+description: JavaScript and TypeScript Files
+file_patterns:
+  - '**/*.js'
+  - '**/*.ts'

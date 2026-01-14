@@ -1,0 +1,82 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+
+      - name: Install pnpm
+        run: npm install -g pnpm@10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6
+        with:
+          node-version: 20
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Create Release Pull Request or Publish
+        id: changesets
+        uses: changesets/action@e2f8e964d080ae97c874b19e27b12e0a8620fb6c # https://github.com/coveo-platform/gha-infra
+        with:
+          title: 'chore: release'
+          commit: 'chore: release'
+          version: pnpm changeset version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Debug changesets outputs
+        run: |
+          echo "published: ${{ steps.changesets.outputs.published }}"
+          echo "hasChangesets: ${{ steps.changesets.outputs.hasChangesets }}"
+          echo "publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}"
+
+      - name: Create release
+        if: steps.changesets.outputs.published == 'true' && steps.changesets.outputs.hasChangesets == 'true'
+        run: |
+          # Get the version from package.json
+          VERSION=$(node -p "require('./package.json').version")
+
+          # Check if this version tag already exists (release already done)
+          if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+            echo "Release v$VERSION already exists, skipping"
+            exit 0
+          fi
+
+          # Create the release tag
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "v$VERSION" -m "Release v$VERSION"
+          git push origin "v$VERSION"
+
+          # Update major version tag
+          MAJOR=$(echo "$VERSION" | cut -d. -f1)
+          git tag -fa "v$MAJOR" -m "Update v$MAJOR tag to v$VERSION"
+          git push origin "v$MAJOR" --force
+
+          echo "Released v$VERSION and updated v$MAJOR tag"
+
+          # Create GitHub release
+          gh release create "v$VERSION" --generate-notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

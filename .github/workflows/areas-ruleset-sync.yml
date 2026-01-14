@@ -1,0 +1,35 @@
+name: Update Area Rulesets
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.areas/**'
+      - '.github/workflows/areas-ruleset-sync.yml'
+      - 'action.yml'
+      - 'dist/index.js'
+
+permissions:
+  contents: read # minimum permission to checkout the repo such that .areas can be parsed.
+
+jobs:
+  manage-areas:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+        with:
+          sparse-checkout:
+            - .areas # Only needs access to the configuration
+            - dist/index.js # The workflows in this repo use the compiled action directly
+
+      - name: Sync Area Rulesets
+        uses: ./
+        with:
+          token: ${{ secrets.DEV_TOKEN }}
+          command: ruleset-sync
