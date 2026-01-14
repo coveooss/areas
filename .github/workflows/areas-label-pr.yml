@@ -18,9 +18,11 @@ jobs:
 
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
         with:
-          sparse-checkout:
-            - .areas # Only needs access to the configuration
-            - dist/index.js # The workflows in this repo use the compiled action directly
+          # The action only needs access to the .areas configuration,
+          # but the workflows in this repo use the compiled action directly, so it also needs dist/index.js
+          sparse-checkout: |
+            .areas
+            dist/index.js
 
       - name: Label PR
         uses: ./
