@@ -1,0 +1,4 @@
+description: GitHub configuration and CI/CD infrastructure
+file_patterns:
+  - .github/*
+  - .github/workflows/**

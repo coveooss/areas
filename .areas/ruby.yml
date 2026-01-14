@@ -1,7 +1,0 @@
-description: Ruby files
-reviewers:
-  glowing-potato-rubyist: ~
-review_bypass:
-  dxui-vets: pull_request
-file_patterns:
-  - '**/*.rb'

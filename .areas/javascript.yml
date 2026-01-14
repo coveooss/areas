@@ -1,12 +1,4 @@
 description: JavaScript and TypeScript Files
-reviewers:
-  glowing-potato-feds:
-    minimum_approvals: 1
-  glowing-potato-admins: ~
-review_bypass:
-  dxui-vets: pull_request
 file_patterns:
   - '**/*.js'
-  - '**/*.jsx'
   - '**/*.ts'
-  - '**/*.tsx'
