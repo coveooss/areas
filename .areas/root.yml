@@ -7,3 +7,7 @@ file_patterns:
   - vitest.config.js
   - vitest.*.config.js
   - .husky/**
+
+reviewers:
+  dx:
+    minimum_approvals: 1
