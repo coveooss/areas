@@ -2,3 +2,7 @@ description: GitHub configuration and CI/CD infrastructure
 file_patterns:
   - .github/*
   - .github/workflows/**
+
+reviewers:
+  dx:
+    minimum_approvals: 1

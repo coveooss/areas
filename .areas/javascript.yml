@@ -2,3 +2,7 @@ description: JavaScript and TypeScript Files
 file_patterns:
   - '**/*.js'
   - '**/*.ts'
+
+reviewers:
+  dx:
+    minimum_approvals: 1

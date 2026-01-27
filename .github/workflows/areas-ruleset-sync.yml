@@ -16,6 +16,7 @@ permissions:
 jobs:
   manage-areas:
     runs-on: ubuntu-latest
+    environment: push-to-main-workflows
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
@@ -30,8 +31,15 @@ jobs:
             .areas
             dist/index.js
 
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2
+        with:
+          app-id: ${{ vars.CODE_AREAS_APP_ID }}
+          private-key: ${{ secrets.CODE_AREAS_PEM }}
+
       - name: Sync Area Rulesets
         uses: ./
         with:
-          token: ${{ secrets.DEV_TOKEN }}
+          token: ${{ steps.generate-token.outputs.token }}
           command: ruleset-sync
