@@ -96,6 +96,7 @@ jobs:
 
 Required permissions:
 - Repository: Admin write
+- Organization: Members: `read`
 
 Under the hood, it uses the [update ruleset API](https://docs.github.com/en/rest/repos/rules?apiVersion=2022-11-28#update-a-repository-ruleset), hence the admin permission.
 
