@@ -45,7 +45,8 @@ export class LabelManager {
 				pull_number: prNumber,
 				per_page: 100,
 			},
-			(response) => response.data.map((file) => file.filename),
+			(response: { data: Array<{ filename: string }> }) =>
+				response.data.map((file: { filename: string }) => file.filename),
 		);
 	}
 
@@ -76,19 +77,21 @@ export class LabelManager {
 				issue_number: prNumber,
 			});
 
-		const currentLabels = currentLabelsResponse.data.map((l) => l.name);
+		const currentLabels = currentLabelsResponse.data.map(
+			(l: { name: string }) => l.name,
+		);
 		const currentAreaLabels = currentLabels.filter(
-			(l) => l.startsWith("area:") || l.startsWith("team:"),
+			(l: string) => l.startsWith("area:") || l.startsWith("team:"),
 		);
 
 		// Labels to add
 		const labelsToAdd = [...desiredLabels].filter(
-			(l) => !currentLabels.includes(l),
+			(l: string) => !currentLabels.includes(l),
 		);
 
 		// Labels to remove
 		const labelsToRemove = currentAreaLabels.filter(
-			(l) => !desiredLabels.has(l),
+			(l: string) => !desiredLabels.has(l),
 		);
 
 		if (labelsToAdd.length === 0 && labelsToRemove.length === 0) {
