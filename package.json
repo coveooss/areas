@@ -1,6 +1,6 @@
 {
 	"name": "areas",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"description": "Manage and label areas in your repository based on the .areas configuration.",
 	"main": "index.js",
 	"scripts": {
