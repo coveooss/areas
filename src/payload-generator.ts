@@ -43,13 +43,7 @@ export class PayloadGenerator {
 					},
 				},
 			],
-			bypass_actors: config.review_bypass
-				? Object.values(config.review_bypass).map((bypass) => ({
-						actor_id: bypass.team_id,
-						actor_type: "Team" as const,
-						bypass_mode: bypass.mode,
-					}))
-				: [],
+			bypass_actors: config.review_bypass ?? [],
 		};
 	}
 }

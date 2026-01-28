@@ -38388,6 +38388,80 @@ run();
 
 /***/ }),
 
+/***/ 8927:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.BypassRuleParser = void 0;
+const VALID_ACTOR_PREFIXES = ["team", "role", "integration"];
+const VALID_BYPASS_MODES = ["always", "pull_request", "exempt"];
+class BypassRuleParser {
+    teamResolver;
+    constructor(teamResolver) {
+        this.teamResolver = teamResolver;
+    }
+    async parse(key, mode) {
+        const { prefix, identifier } = this.parseKey(key);
+        if (!VALID_BYPASS_MODES.includes(mode)) {
+            throw new Error(`Invalid bypass mode '${mode}' for '${key}'. ` +
+                `Valid modes are: ${VALID_BYPASS_MODES.join(", ")}`);
+        }
+        let actorId;
+        let actorType;
+        switch (prefix) {
+            case "team": {
+                actorId = await this.teamResolver.resolveTeamId(identifier);
+                actorType = "Team";
+                break;
+            }
+            case "role": {
+                actorId = Number.parseInt(identifier, 10);
+                if (Number.isNaN(actorId)) {
+                    throw new Error(`Invalid role ID '${identifier}' in '${key}': role ID must be a number`);
+                }
+                actorType = "RepositoryRole";
+                break;
+            }
+            case "integration": {
+                actorId = Number.parseInt(identifier, 10);
+                if (Number.isNaN(actorId)) {
+                    throw new Error(`Invalid integration ID '${identifier}' in '${key}': integration ID must be a number`);
+                }
+                actorType = "Integration";
+                break;
+            }
+        }
+        return {
+            bypass_mode: mode,
+            actor_id: actorId,
+            actor_type: actorType,
+        };
+    }
+    parseKey(key) {
+        const slashIndex = key.indexOf("/");
+        // No prefix defaults to team
+        if (slashIndex === -1) {
+            return { prefix: "team", identifier: key };
+        }
+        const prefix = key.substring(0, slashIndex).toLowerCase();
+        const identifier = key.substring(slashIndex + 1);
+        if (!VALID_ACTOR_PREFIXES.includes(prefix)) {
+            throw new Error(`Invalid review_bypass actor type '${prefix}' in '${key}'. ` +
+                `Valid types are: ${VALID_ACTOR_PREFIXES.join(", ")}`);
+        }
+        if (!identifier) {
+            throw new Error(`Invalid review_bypass key '${key}': identifier after '${prefix}/' cannot be empty`);
+        }
+        return { prefix, identifier };
+    }
+}
+exports.BypassRuleParser = BypassRuleParser;
+
+
+/***/ }),
+
 /***/ 8758:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -38498,12 +38572,15 @@ const node_path_1 = __importDefault(__nccwpck_require__(6760));
 const fs_extra_1 = __importDefault(__nccwpck_require__(1159));
 const glob_1 = __nccwpck_require__(122);
 const js_yaml_1 = __importDefault(__nccwpck_require__(3313));
+const bypass_rule_parser_js_1 = __nccwpck_require__(8927);
 class ConfigurationReader {
     areasDir;
     teamResolver;
+    bypassRuleParser;
     constructor(areasDir, teamResolver) {
         this.areasDir = areasDir;
         this.teamResolver = teamResolver;
+        this.bypassRuleParser = new bypass_rule_parser_js_1.BypassRuleParser(teamResolver);
     }
     async readConfigurations() {
         const files = (0, glob_1.globSync)(`${this.areasDir}/*.{yml,yaml}`);
@@ -38534,13 +38611,10 @@ class ConfigurationReader {
                 }
             }
             if (rawConfig.review_bypass) {
-                config.review_bypass = {};
-                for (const [teamSlug, mode] of Object.entries(rawConfig.review_bypass)) {
-                    const teamId = await this.teamResolver.resolveTeamId(teamSlug);
-                    config.review_bypass[teamSlug] = {
-                        mode: mode,
-                        team_id: teamId,
-                    };
+                config.review_bypass = [];
+                for (const [key, mode] of Object.entries(rawConfig.review_bypass)) {
+                    const bypassConfig = await this.bypassRuleParser.parse(key, mode);
+                    config.review_bypass.push(bypassConfig);
                 }
             }
             configs.push(config);
@@ -38728,13 +38802,7 @@ class PayloadGenerator {
                     },
                 },
             ],
-            bypass_actors: config.review_bypass
-                ? Object.values(config.review_bypass).map((bypass) => ({
-                    actor_id: bypass.team_id,
-                    actor_type: "Team",
-                    bypass_mode: bypass.mode,
-                }))
-                : [],
+            bypass_actors: config.review_bypass ?? [],
         };
     }
 }

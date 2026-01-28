@@ -44,8 +44,37 @@ reviewers:
     minimum_approvals: 0  # Request Only (Non-blocking)
 
 review_bypass:
-  docs-admins: always  # Can bypass these rules (always, pull_request, or exempt)
+  team/docs-admins: always          # Team can bypass (by team slug)
+  docs-admins: always               # No prefix defaults to team
+  role/5: always                    # Repository role bypass (by role ID)
+  integration/139346: pull_request  # GitHub App bypass (by installation ID)
 ```
+
+### Bypass Actor Types
+
+The `review_bypass` configuration supports different actor types via prefixes:
+
+| Prefix | Description | Identifier |
+|--------|-------------|------------|
+| (none) | GitHub Team (default) | Team slug (e.g., `docs-admins`) |
+| `team/` | GitHub Team | Team slug (e.g., `team/docs-admins`) |
+| `role/` | Repository Role | Role ID as number (e.g., `role/5`) |
+| `integration/` | GitHub App | Installation ID as number (e.g., `integration/139346`) |
+
+`team/` is by slug, because they are ubiquitous and what user expect the most.
+
+`role/` and `integration/` are "by id", because:
+- The Ruleset API expects an ID.
+- Roles don't have slugs and I’m not sure how to resolve a role name to an ID
+- Integration IDs are difficult to get from the app id. It'd need a `org:read` permission.
+- It's fairly easy to get those values by exporting a ruleset from the UI.
+- They should seldom be modified.
+
+Bypass modes:
+- `always` - Can always bypass the ruleset
+- `pull_request` - Can bypass only for pull requests
+- `exempt` - Will not be prompted to bypass
+
 
 ### File patterns
 
