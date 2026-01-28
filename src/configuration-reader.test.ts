@@ -62,7 +62,7 @@ describe("ConfigurationReader", () => {
 		expect(configs[0].reviewers["other-team"].minimum_approvals).toBe(0);
 	});
 
-	it("should parse review_bypass and resolve teams", async () => {
+	it("should parse review_bypass with team/ prefix and resolve teams", async () => {
 		const areasDir = "/tmp/areas";
 		const mockResolver = {
 			resolveTeamId: vi.fn().mockImplementation(async (slug: string) => {
@@ -76,7 +76,7 @@ describe("ConfigurationReader", () => {
 			`
 reviewers: {}
 review_bypass:
-  bypass-team: pull_request
+  team/bypass-team: pull_request
 ` as any,
 		);
 
@@ -85,10 +85,13 @@ review_bypass:
 
 		expect(configs).toHaveLength(1);
 		expect(configs[0].review_bypass).toBeDefined();
-		expect(configs[0].review_bypass["bypass-team"]).toEqual({
-			mode: "pull_request",
-			team_id: 999,
-		});
+		expect(configs[0].review_bypass).toEqual([
+			{
+				bypass_mode: "pull_request",
+				actor_id: 999,
+				actor_type: "Team",
+			},
+		]);
 		expect(mockResolver.resolveTeamId).toHaveBeenCalledWith("bypass-team");
 	});
 });

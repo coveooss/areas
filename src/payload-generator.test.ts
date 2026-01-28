@@ -62,17 +62,18 @@ describe("PayloadGenerator", () => {
 		);
 	});
 
-	it("should generate bypass_actors payload", () => {
+	it("should generate bypass_actors payload for team", () => {
 		const generator = new PayloadGenerator();
 		const config = {
 			name: "bypass-area",
 			reviewers: {},
-			review_bypass: {
-				"bypass-team": {
-					mode: "pull_request",
-					team_id: 999,
+			review_bypass: [
+				{
+					bypass_mode: "pull_request" as const,
+					actor_id: 999,
+					actor_type: "Team" as const,
 				},
-			},
+			],
 			file_patterns: ["*.md"],
 		};
 
@@ -84,6 +85,45 @@ describe("PayloadGenerator", () => {
 			actor_type: "Team",
 			bypass_mode: "pull_request",
 		});
+	});
+
+	it("should generate bypass_actors for multiple actor types", () => {
+		const generator = new PayloadGenerator();
+		const config = {
+			name: "bypass-area",
+			reviewers: {},
+			review_bypass: [
+				{
+					bypass_mode: "always" as const,
+					actor_id: 999,
+					actor_type: "Team" as const,
+				},
+				{
+					bypass_mode: "always" as const,
+					actor_id: 5,
+					actor_type: "RepositoryRole" as const,
+				},
+				{
+					bypass_mode: "pull_request" as const,
+					actor_id: 139346,
+					actor_type: "Integration" as const,
+				},
+			],
+			file_patterns: ["*.md"],
+		};
+
+		const payload = generator.generate(config, "coveo/test");
+
+		expect(payload.bypass_actors).toHaveLength(3);
+		expect(payload.bypass_actors).toEqual([
+			{ actor_id: 999, actor_type: "Team", bypass_mode: "always" },
+			{ actor_id: 5, actor_type: "RepositoryRole", bypass_mode: "always" },
+			{
+				actor_id: 139346,
+				actor_type: "Integration",
+				bypass_mode: "pull_request",
+			},
+		]);
 	});
 
 	it("should handle empty reviewers", () => {

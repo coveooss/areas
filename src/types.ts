@@ -7,9 +7,12 @@ export interface ReviewerConfig {
 	team_id: number;
 }
 
+export type BypassActorType = "Team" | "RepositoryRole" | "Integration";
+
 export interface BypassConfig {
-	mode: "always" | "pull_request";
-	team_id: number;
+	bypass_mode: "always" | "pull_request" | "exempt";
+	actor_id: number;
+	actor_type: BypassActorType;
 }
 
 export interface AreaConfig {
@@ -17,7 +20,7 @@ export interface AreaConfig {
 	description?: string;
 	file_patterns: string[];
 	reviewers: Record<string, ReviewerConfig>;
-	review_bypass?: Record<string, BypassConfig>;
+	review_bypass?: BypassConfig[];
 }
 
 export interface TeamResolver {
@@ -57,7 +60,7 @@ export interface RulesetPayload {
 	bypass_actors: Array<{
 		actor_id: number;
 		actor_type: "Team" | "RepositoryRole" | "Integration" | "OrganizationAdmin";
-		bypass_mode: "always" | "pull_request";
+		bypass_mode: "always" | "pull_request" | "exempt";
 	}>;
 }
 

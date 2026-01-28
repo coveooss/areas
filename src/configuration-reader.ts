@@ -2,6 +2,7 @@ import path from "node:path";
 import fs from "fs-extra";
 import { globSync } from "glob";
 import yaml from "js-yaml";
+import { BypassRuleParser } from "./bypass-rule-parser.js";
 import type { AreaConfig, TeamResolver } from "./types.js";
 
 interface RawConfig {
@@ -15,10 +16,12 @@ interface RawConfig {
 export class ConfigurationReader {
 	private areasDir: string;
 	private teamResolver: TeamResolver;
+	private bypassRuleParser: BypassRuleParser;
 
 	constructor(areasDir: string, teamResolver: TeamResolver) {
 		this.areasDir = areasDir;
 		this.teamResolver = teamResolver;
+		this.bypassRuleParser = new BypassRuleParser(teamResolver);
 	}
 
 	async readConfigurations(): Promise<AreaConfig[]> {
@@ -58,15 +61,10 @@ export class ConfigurationReader {
 			}
 
 			if (rawConfig.review_bypass) {
-				config.review_bypass = {};
-				for (const [teamSlug, mode] of Object.entries(
-					rawConfig.review_bypass,
-				)) {
-					const teamId = await this.teamResolver.resolveTeamId(teamSlug);
-					config.review_bypass[teamSlug] = {
-						mode: mode as "always" | "pull_request",
-						team_id: teamId,
-					};
+				config.review_bypass = [];
+				for (const [key, mode] of Object.entries(rawConfig.review_bypass)) {
+					const bypassConfig = await this.bypassRuleParser.parse(key, mode);
+					config.review_bypass.push(bypassConfig);
 				}
 			}
 
