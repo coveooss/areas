@@ -18,7 +18,7 @@ This document provides context for AI coding assistants (GitHub Copilot, Cursor,
 | Runtime | Node.js 20 |
 | Language | TypeScript 5.x (strict mode) |
 | Package Manager | pnpm 10.x |
-| Build | @vercel/ncc (bundles to single file) |
+| Build | esbuild (bundles to single file) |
 | Testing | Vitest |
 | Linting/Formatting | Biome |
 | Git Hooks | Husky |
