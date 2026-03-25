@@ -124,7 +124,7 @@ jobs:
 ```
 
 Required permissions:
-- Repository: Admin write
+- Repository: Admin write • ⚠️ See [token types](#token-handling) below on how to secure this powerful token.
 - Organization: Members: `read`
 
 Under the hood, it uses the [update ruleset API](https://docs.github.com/en/rest/repos/rules?apiVersion=2022-11-28#update-a-repository-ruleset), hence the admin permission.
@@ -167,7 +167,7 @@ Required permissions of the `TOKEN`:
 
 Under the hood, it needs to convert the team name to a team ID, hence the Organization Members permission.
 
-### Token types
+### Token handling
 
 The GitHub Actions above can work with [Personal Access Tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#about-personal-access-tokens), but this is not recommended.
 
@@ -197,6 +197,9 @@ Even better, you should create ephemeral tokens using a GitHub App:
 
 > [!TIP]
 > The best practice to ensure that only the right secrets are exposed in the right context is to use [GitHub Environment Secrets](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets#creating-secrets-for-an-environment).
+
+> [!TIP]
+> For added safety, you may also configure the [`secrets-in-workflow-warning`](./.github/workflows/secrets-in-workflow-warning.yml) action to highlight when someone is tampering with secrets in PRs.
 
 ## Development
 
