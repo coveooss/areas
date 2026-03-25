@@ -22,7 +22,7 @@ Use those areas to:
 
 1. Create a `.areas/` directory in your repository
 2. Add area configuration files (see [Configuration](#configuration))
-3. Set up the GitHub workflows (see [Usage](#usage))
+3. Set up the GitHub workflows (see [Installation](#installation))
 
 ## Configuration
 
