@@ -189,14 +189,23 @@ Even better, you should create ephemeral tokens using a GitHub App:
 ```
 
 > [!CAUTION]
-> Furthermore, if you install the "Auto-Label PRs" action on, it is critical to configure it with a _different_ token than the "Sync Rulesets" action 
-> 
+> If you install the "Auto-Label PRs" action, it is critical to configure it with a _different_ token than the one used by the "Sync Rulesets" action.
+>
+> For example:
+>
+> - Use a high‑privilege token (for example, `secrets.SYNC_RULESETS_TOKEN`) **only** for the "Sync Rulesets" workflow.
+> - Use a separate, more restricted token (for example, `secrets.AUTO_LABEL_TOKEN`) for the "Auto-Label PRs" workflow.
+>
 > This is important because the "Sync Rulesets" action requires the "Admin write" permission.
 >
-> Exposing such secret on PR workflows means that something or someone could craft a PR and expose the secret, even without merging or being reviewed.
+> Exposing such an admin‑level secret on PR workflows means that something or someone could craft a PR and expose the secret, even without merging or being reviewed.
 
 > [!TIP]
-> The best practice to ensure that only the right secrets are exposed in the right context is to use [GitHub Environment Secrets](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets#creating-secrets-for-an-environment).
+> The best practice to ensure that only the right secrets are exposed in the right context is to use [GitHub Environment Secrets](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets#creating-secrets-for-an-environment),
+> for example:
+>
+> - A `ruleset-admin` environment that defines `SYNC_RULESETS_TOKEN`, used only by the scheduled "Sync Rulesets" workflow.
+> - A separate `pr-labeling` (or similar) environment that defines `AUTO_LABEL_TOKEN`, used only by the "Auto-Label PRs" workflow.
 
 > [!TIP]
 > For added safety, you may also configure the [`secrets-in-workflow-warning`](./.github/workflows/secrets-in-workflow-warning.yml) action to highlight when someone is tampering with secrets in PRs.
