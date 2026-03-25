@@ -22,7 +22,7 @@ Use those areas to:
 
 1. Create a `.areas/` directory in your repository
 2. Add area configuration files (see [Configuration](#configuration))
-3. Set up the GitHub workflows (see [Usage](#usage))
+3. Set up the GitHub workflows (see [Installation](#installation))
 
 ## Configuration
 
@@ -91,7 +91,7 @@ See [GitHub's documentation](https://docs.github.com/en/repositories/configuring
 | `command` | The mode to run: `ruleset-sync` or `label-pr`. | `true` | N/A |
 | `working-directory` | Path containing the `.areas` folder. | `false` | `.` |
 
-## Usage
+## Installation
 
 ### 1. Sync Rulesets (on Push)
 
@@ -124,7 +124,7 @@ jobs:
 ```
 
 Required permissions:
-- Repository: Admin write
+- Repository: Admin write • ⚠️ See [token types](#token-handling) below on how to secure this powerful token.
 - Organization: Members: `read`
 
 Under the hood, it uses the [update ruleset API](https://docs.github.com/en/rest/repos/rules?apiVersion=2022-11-28#update-a-repository-ruleset), hence the admin permission.
@@ -166,6 +166,49 @@ Required permissions of the `TOKEN`:
 - Organization: Members: `read`
 
 Under the hood, it needs to convert the team name to a team ID, hence the Organization Members permission.
+
+### Token handling
+
+The GitHub Actions above can work with [Personal Access Tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#about-personal-access-tokens), but this is not recommended.
+
+At the very least, you should be using [Fine-Grained Personal Access Tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token) with just the right permissions.
+
+Even better, you should create ephemeral tokens using a GitHub App:
+```yaml
+- name: Generate a token
+  id: generate-token
+  uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2
+  with:
+    app-id: ${{ vars.CODE_AREAS_APP_ID }}
+    private-key: ${{ secrets.CODE_AREAS_PEM }}
+
+- uses: coveooss/areas@v0 # REPLACE ME
+  with:
+    token: ${{ steps.generate-token.outputs.token }}
+    command: ruleset-sync
+```
+
+> [!CAUTION]
+> If you install the "Auto-Label PRs" action, it is critical to configure it with a _different_ token than the one used by the "Sync Rulesets" action.
+>
+> For example:
+>
+> - Use a high‑privilege token (for example, `secrets.SYNC_RULESETS_TOKEN`) **only** for the "Sync Rulesets" workflow.
+> - Use a separate, more restricted token (for example, `secrets.AUTO_LABEL_TOKEN`) for the "Auto-Label PRs" workflow.
+>
+> This is important because the "Sync Rulesets" action requires the "Admin write" permission.
+>
+> Exposing such an admin‑level secret on PR workflows means that something or someone could craft a PR and expose the secret, even without merging or being reviewed.
+
+> [!TIP]
+> The best practice to ensure that only the right secrets are exposed in the right context is to use [GitHub Environment Secrets](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets#creating-secrets-for-an-environment),
+> for example:
+>
+> - A `ruleset-admin` environment that defines `SYNC_RULESETS_TOKEN`, used only by the scheduled "Sync Rulesets" workflow.
+> - A separate `pr-labeling` (or similar) environment that defines `AUTO_LABEL_TOKEN`, used only by the "Auto-Label PRs" workflow.
+
+> [!TIP]
+> For added safety, you may also configure the [`secrets-in-workflow-warning`](./.github/workflows/secrets-in-workflow-warning.yml) action to highlight when someone is tampering with secrets in PRs.
 
 ## Development
 
