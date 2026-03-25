@@ -12,6 +12,11 @@ if echo "$STAGED_FILES" | grep -qE '^(src/|package\.json|tsconfig\.json)'; then
   pnpm build
 fi
 
+# Validate renovate config if it changed
+if echo "$STAGED_FILES" | grep -qE '^(renovate\.json5)$' || git diff --cached --diff-filter=ACMR -G renovate -- package.json; then
+  pnpm validate:renovate
+fi
+
 # Check if any originally staged files (or dist/) now have unstaged changes
 CHANGED_STAGED=""
 for file in $STAGED_FILES; do

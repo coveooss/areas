@@ -33,3 +33,6 @@ jobs:
 
       - name: Lint
         run: pnpm lint
+
+      - name: Validate Renovate config
+        run: pnpm validate:renovate
