@@ -5,8 +5,7 @@
   ],
   "postUpgradeTasks": {
     "commands": [
-      "pnpm install --frozen-lockfile",
-      "pnpm run build",
+      "pnpm exec esbuild src/action.ts --bundle --platform=node --target=node20 --format=cjs --outfile=dist/index.js",
     ],
     "fileFilters": ["dist/index.js"],
     "executionMode": "branch"
