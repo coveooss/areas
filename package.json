@@ -34,7 +34,7 @@
 		"@changesets/cli": "^2.29.8",
 		"@types/fs-extra": "^11.0.4",
 		"@types/js-yaml": "^4.0.9",
-		"@types/node": "^25.0.7",
+		"@types/node": "^25.9.1",
 		"@vitest/coverage-v8": "^4.0.17",
 		"esbuild": "0.28.0",
 		"husky": "^9.1.7",
