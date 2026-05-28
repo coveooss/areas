@@ -2,4 +2,4 @@
 "areas": minor
 ---
 
-chore(deps): update node.js to v24.
+chore(deps): update node.js to v24
