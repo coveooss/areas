@@ -3,6 +3,7 @@
   "extends": [
     "github>coveo/renovate-presets"
   ],
+  "minimumReleaseAge": "7 days",
   "postUpgradeTasks": {
     "commands": [
       "pnpm install --frozen-lockfile --ignore-scripts",
