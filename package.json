@@ -20,7 +20,7 @@
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
-	"packageManager": "pnpm@11.5.2",
+	"packageManager": "pnpm@11.10.0",
 	"dependencies": {
 		"@actions/core": "^3.0.0",
 		"@actions/github": "^8.0.1",
