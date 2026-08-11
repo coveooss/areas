@@ -49636,7 +49636,7 @@ var Ui = Object.assign(ts, { stream: Bt, iterate: Ut });
 var Ze = Object.assign(Je, { glob: Je, globSync: ts, sync: Ui, globStream: Qe, stream: Ii, globStreamSync: Bt, streamSync: ji, globIterate: es, iterate: Bi, globIterateSync: Ut, iterateSync: zi, Glob: I, hasMagic: le, escape: tt, unescape: W });
 Ze.glob = Ze;
 
-// node_modules/.pnpm/js-yaml@4.3.0/node_modules/js-yaml/dist/js-yaml.mjs
+// node_modules/.pnpm/js-yaml@4.3.1/node_modules/js-yaml/dist/js-yaml.mjs
 function getDefaultExportFromCjs(x2) {
   return x2 && x2.__esModule && Object.prototype.hasOwnProperty.call(x2, "default") ? x2["default"] : x2;
 }
@@ -50497,7 +50497,7 @@ function requireOmap() {
   const _toString = Object.prototype.toString;
   function resolveYamlOmap(data) {
     if (data === null) return true;
-    const objectKeys = [];
+    const objectKeys = {};
     const object = data;
     for (let index = 0, length = object.length; index < length; index += 1) {
       const pair = object[index];
@@ -50511,8 +50511,8 @@ function requireOmap() {
         }
       }
       if (!pairHasKey) return false;
-      if (objectKeys.indexOf(pairKey) === -1) objectKeys.push(pairKey);
-      else return false;
+      if (_hasOwnProperty.call(objectKeys, pairKey)) return false;
+      Object.defineProperty(objectKeys, pairKey, { value: true });
     }
     return true;
   }
