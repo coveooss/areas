@@ -47,7 +47,7 @@ review_bypass:
   team/docs-admins: always          # Team can bypass (by team slug)
   docs-admins: always               # No prefix defaults to team
   role/5: always                    # Repository role bypass (by role ID)
-  integration/139346: pull_request  # GitHub App bypass (by installation ID)
+  integration/139346: pull_request  # GitHub App bypass (by App ID)
 ```
 
 ### Bypass Actor Types
@@ -59,16 +59,22 @@ The `review_bypass` configuration supports different actor types via prefixes:
 | (none) | GitHub Team (default) | Team slug (e.g., `docs-admins`) |
 | `team/` | GitHub Team | Team slug (e.g., `team/docs-admins`) |
 | `role/` | Repository Role | Role ID as number (e.g., `role/5`) |
-| `integration/` | GitHub App | Installation ID as number (e.g., `integration/139346`) |
+| `integration/` | GitHub App | App ID as number (e.g., `integration/139346`) |
 
 `team/` is by slug, because they are ubiquitous and what user expect the most.
 
 `role/` and `integration/` are "by id", because:
 - The Ruleset API expects an ID.
 - Roles don't have slugs and I’m not sure how to resolve a role name to an ID
-- Integration IDs are difficult to get from the app id. It'd need a `org:read` permission.
 - It's fairly easy to get those values by exporting a ruleset from the UI.
 - They should seldom be modified.
+
+> [!IMPORTANT]
+> For `integration/`, the value is the GitHub **App ID**, not the installation ID.
+> The rulesets API rejects an installation ID with `Invalid bypass actor` /
+> `Actor integration must be part of the ruleset source or owner organization`.
+> Get the App ID from `GET /apps/{app_slug}` (public, no special permissions) or
+> from the app's settings page — not from the installation URL.
 
 Bypass modes:
 - `always` - Can always bypass the ruleset
