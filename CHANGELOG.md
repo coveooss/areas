@@ -1,5 +1,18 @@
 # areas
 
+## 0.2.0
+
+### Minor Changes
+
+- 08e3666: chore(deps): update node.js to v24
+
+### Patch Changes
+
+- 1de069c: chore(deps): update non-major JavaScript and TypeScript dependencies.
+- a23297c: fix: paginate `getRulesets` so ruleset-sync works on repos with more than 30 rulesets.
+- 6ea365d: chore(deps): update node.js to v20.20.1 and @types/node to v25.5.0.
+- 69b7434: chore(deps): update dependency @types/node to v25.9.1.
+
 ## 0.1.0
 
 ### Minor Changes
