@@ -12,11 +12,15 @@ export class RulesetManager {
 	}
 
 	async getRulesets(): Promise<Ruleset[]> {
-		const response = await this.octokit.rest.repos.getRepoRulesets({
-			owner: this.owner,
-			repo: this.repo,
-		});
-		return response.data as Ruleset[];
+		const rulesets = await this.octokit.paginate(
+			this.octokit.rest.repos.getRepoRulesets,
+			{
+				owner: this.owner,
+				repo: this.repo,
+				per_page: 100,
+			},
+		);
+		return rulesets as Ruleset[];
 	}
 
 	async deleteRuleset(rulesetId: number): Promise<void> {

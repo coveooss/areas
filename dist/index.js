@@ -46638,11 +46638,15 @@ var RulesetManager = class {
     this.repo = repo;
   }
   async getRulesets() {
-    const response = await this.octokit.rest.repos.getRepoRulesets({
-      owner: this.owner,
-      repo: this.repo
-    });
-    return response.data;
+    const rulesets = await this.octokit.paginate(
+      this.octokit.rest.repos.getRepoRulesets,
+      {
+        owner: this.owner,
+        repo: this.repo,
+        per_page: 100
+      }
+    );
+    return rulesets;
   }
   async deleteRuleset(rulesetId) {
     await this.octokit.rest.repos.deleteRepoRuleset({
