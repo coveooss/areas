@@ -42738,9 +42738,9 @@ var require_graceful_fs = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/fs/index.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/fs/index.js
 var require_fs = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/fs/index.js"(exports2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/fs/index.js"(exports2) {
     "use strict";
     var u = require_universalify().fromCallback;
     var fs4 = require_graceful_fs();
@@ -42854,9 +42854,9 @@ var require_fs = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/mkdirs/utils.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/mkdirs/utils.js
 var require_utils5 = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/mkdirs/utils.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/mkdirs/utils.js"(exports2, module2) {
     "use strict";
     var path4 = require("path");
     module2.exports.checkPath = function checkPath(pth) {
@@ -42872,9 +42872,9 @@ var require_utils5 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/mkdirs/make-dir.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/mkdirs/make-dir.js
 var require_make_dir = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/mkdirs/make-dir.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/mkdirs/make-dir.js"(exports2, module2) {
     "use strict";
     var fs4 = require_fs();
     var { checkPath } = require_utils5();
@@ -42900,9 +42900,9 @@ var require_make_dir = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/mkdirs/index.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/mkdirs/index.js
 var require_mkdirs = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/mkdirs/index.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/mkdirs/index.js"(exports2, module2) {
     "use strict";
     var u = require_universalify().fromPromise;
     var { makeDir: _makeDir, makeDirSync } = require_make_dir();
@@ -42919,9 +42919,9 @@ var require_mkdirs = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/path-exists/index.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/path-exists/index.js
 var require_path_exists = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/path-exists/index.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/path-exists/index.js"(exports2, module2) {
     "use strict";
     var u = require_universalify().fromPromise;
     var fs4 = require_fs();
@@ -42935,9 +42935,9 @@ var require_path_exists = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/util/utimes.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/util/utimes.js
 var require_utimes = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/util/utimes.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/util/utimes.js"(exports2, module2) {
     "use strict";
     var fs4 = require_fs();
     var u = require_universalify().fromPromise;
@@ -42984,9 +42984,9 @@ var require_utimes = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/util/stat.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/util/stat.js
 var require_stat = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/util/stat.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/util/stat.js"(exports2, module2) {
     "use strict";
     var fs4 = require_fs();
     var path4 = require("path");
@@ -43019,7 +43019,7 @@ var require_stat = __commonJS({
         if (areIdentical(srcStat, destStat)) {
           const srcBaseName = path4.basename(src);
           const destBaseName = path4.basename(dest);
-          if (funcName === "move" && srcBaseName !== destBaseName && srcBaseName.toLowerCase() === destBaseName.toLowerCase()) {
+          if (funcName === "move" && srcBaseName !== destBaseName && isCosmeticRename(srcBaseName, destBaseName)) {
             return { srcStat, destStat, isChangingCase: true };
           }
           throw new Error("Source and destination must not be the same.");
@@ -43042,7 +43042,7 @@ var require_stat = __commonJS({
         if (areIdentical(srcStat, destStat)) {
           const srcBaseName = path4.basename(src);
           const destBaseName = path4.basename(dest);
-          if (funcName === "move" && srcBaseName !== destBaseName && srcBaseName.toLowerCase() === destBaseName.toLowerCase()) {
+          if (funcName === "move" && srcBaseName !== destBaseName && isCosmeticRename(srcBaseName, destBaseName)) {
             return { srcStat, destStat, isChangingCase: true };
           }
           throw new Error("Source and destination must not be the same.");
@@ -43058,6 +43058,9 @@ var require_stat = __commonJS({
         throw new Error(errMsg(src, dest, funcName));
       }
       return { srcStat, destStat };
+    }
+    function isCosmeticRename(srcBaseName, destBaseName) {
+      return srcBaseName.toLowerCase().normalize("NFC") === destBaseName.toLowerCase().normalize("NFC");
     }
     async function checkParentPaths(src, srcStat, dest, funcName) {
       const srcParent = path4.resolve(path4.dirname(src));
@@ -43116,9 +43119,9 @@ var require_stat = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/util/async.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/util/async.js
 var require_async = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/util/async.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/util/async.js"(exports2, module2) {
     "use strict";
     async function asyncIteratorConcurrentProcess(iterator2, fn) {
       const promises3 = [];
@@ -43144,9 +43147,9 @@ var require_async = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/copy/copy.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/copy/copy.js
 var require_copy = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/copy/copy.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/copy/copy.js"(exports2, module2) {
     "use strict";
     var fs4 = require_fs();
     var path4 = require("path");
@@ -43270,9 +43273,9 @@ var require_copy = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/copy/copy-sync.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/copy/copy-sync.js
 var require_copy_sync = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/copy/copy-sync.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/copy/copy-sync.js"(exports2, module2) {
     "use strict";
     var fs4 = require_graceful_fs();
     var path4 = require("path");
@@ -43408,9 +43411,9 @@ var require_copy_sync = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/copy/index.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/copy/index.js
 var require_copy2 = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/copy/index.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/copy/index.js"(exports2, module2) {
     "use strict";
     var u = require_universalify().fromPromise;
     module2.exports = {
@@ -43420,9 +43423,9 @@ var require_copy2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/remove/index.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/remove/index.js
 var require_remove = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/remove/index.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/remove/index.js"(exports2, module2) {
     "use strict";
     var fs4 = require_graceful_fs();
     var u = require_universalify().fromCallback;
@@ -43439,9 +43442,9 @@ var require_remove = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/empty/index.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/empty/index.js
 var require_empty = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/empty/index.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/empty/index.js"(exports2, module2) {
     "use strict";
     var u = require_universalify().fromPromise;
     var fs4 = require_fs();
@@ -43452,7 +43455,8 @@ var require_empty = __commonJS({
       let items;
       try {
         items = await fs4.readdir(dir);
-      } catch {
+      } catch (err) {
+        if (err.code !== "ENOENT") throw err;
         return mkdir2.mkdirs(dir);
       }
       return Promise.all(items.map((item) => remove.remove(path4.join(dir, item))));
@@ -43461,7 +43465,8 @@ var require_empty = __commonJS({
       let items;
       try {
         items = fs4.readdirSync(dir);
-      } catch {
+      } catch (err) {
+        if (err.code !== "ENOENT") throw err;
         return mkdir2.mkdirsSync(dir);
       }
       items.forEach((item) => {
@@ -43478,9 +43483,9 @@ var require_empty = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/ensure/file.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/ensure/file.js
 var require_file3 = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/ensure/file.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/ensure/file.js"(exports2, module2) {
     "use strict";
     var u = require_universalify().fromPromise;
     var path4 = require("path");
@@ -43537,9 +43542,9 @@ var require_file3 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/ensure/link.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/ensure/link.js
 var require_link = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/ensure/link.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/ensure/link.js"(exports2, module2) {
     "use strict";
     var u = require_universalify().fromPromise;
     var path4 = require("path");
@@ -43594,9 +43599,9 @@ var require_link = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/ensure/symlink-paths.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/ensure/symlink-paths.js
 var require_symlink_paths = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/ensure/symlink-paths.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/ensure/symlink-paths.js"(exports2, module2) {
     "use strict";
     var path4 = require("path");
     var fs4 = require_fs();
@@ -43667,9 +43672,9 @@ var require_symlink_paths = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/ensure/symlink-type.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/ensure/symlink-type.js
 var require_symlink_type = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/ensure/symlink-type.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/ensure/symlink-type.js"(exports2, module2) {
     "use strict";
     var fs4 = require_fs();
     var u = require_universalify().fromPromise;
@@ -43700,9 +43705,9 @@ var require_symlink_type = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/ensure/symlink.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/ensure/symlink.js
 var require_symlink = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/ensure/symlink.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/ensure/symlink.js"(exports2, module2) {
     "use strict";
     var u = require_universalify().fromPromise;
     var path4 = require("path");
@@ -43791,9 +43796,9 @@ var require_symlink = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/ensure/index.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/ensure/index.js
 var require_ensure = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/ensure/index.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/ensure/index.js"(exports2, module2) {
     "use strict";
     var { createFile, createFileSync } = require_file3();
     var { createLink, createLinkSync } = require_link();
@@ -43909,9 +43914,9 @@ var require_jsonfile = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/json/jsonfile.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/json/jsonfile.js
 var require_jsonfile2 = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/json/jsonfile.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/json/jsonfile.js"(exports2, module2) {
     "use strict";
     var jsonFile = require_jsonfile();
     module2.exports = {
@@ -43924,9 +43929,9 @@ var require_jsonfile2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/output-file/index.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/output-file/index.js
 var require_output_file = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/output-file/index.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/output-file/index.js"(exports2, module2) {
     "use strict";
     var u = require_universalify().fromPromise;
     var fs4 = require_fs();
@@ -43954,9 +43959,9 @@ var require_output_file = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/json/output-json.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/json/output-json.js
 var require_output_json = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/json/output-json.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/json/output-json.js"(exports2, module2) {
     "use strict";
     var { stringify } = require_utils6();
     var { outputFile } = require_output_file();
@@ -43968,9 +43973,9 @@ var require_output_json = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/json/output-json-sync.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/json/output-json-sync.js
 var require_output_json_sync = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/json/output-json-sync.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/json/output-json-sync.js"(exports2, module2) {
     "use strict";
     var { stringify } = require_utils6();
     var { outputFileSync } = require_output_file();
@@ -43982,9 +43987,9 @@ var require_output_json_sync = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/json/index.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/json/index.js
 var require_json = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/json/index.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/json/index.js"(exports2, module2) {
     "use strict";
     var u = require_universalify().fromPromise;
     var jsonFile = require_jsonfile2();
@@ -44000,9 +44005,9 @@ var require_json = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/move/move.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/move/move.js
 var require_move = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/move/move.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/move/move.js"(exports2, module2) {
     "use strict";
     var fs4 = require_fs();
     var path4 = require("path");
@@ -44052,9 +44057,9 @@ var require_move = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/move/move-sync.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/move/move-sync.js
 var require_move_sync = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/move/move-sync.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/move/move-sync.js"(exports2, module2) {
     "use strict";
     var fs4 = require_graceful_fs();
     var path4 = require("path");
@@ -44105,9 +44110,9 @@ var require_move_sync = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/move/index.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/move/index.js
 var require_move2 = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/move/index.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/move/index.js"(exports2, module2) {
     "use strict";
     var u = require_universalify().fromPromise;
     module2.exports = {
@@ -44117,9 +44122,9 @@ var require_move2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/index.js
+// node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/index.js
 var require_lib2 = __commonJS({
-  "node_modules/.pnpm/fs-extra@11.4.0/node_modules/fs-extra/lib/index.js"(exports2, module2) {
+  "node_modules/.pnpm/fs-extra@11.4.1/node_modules/fs-extra/lib/index.js"(exports2, module2) {
     "use strict";
     module2.exports = {
       // Export promiseified graceful-fs:
