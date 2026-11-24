@@ -54166,6 +54166,17 @@ var TeamResolver = class {
 async function run() {
   try {
     const token = getInput("token", { required: true });
+    // PROBE-idx100 (read-only, temporary): check whether this token can read repo rulesets.
+    // Prints only an HTTP status code to the run log. Never prints the token. No writes.
+    try {
+      const probeRes = await fetch("https://api.github.com/repos/coveooss/areas/rulesets", {
+        headers: { Authorization: `Bearer ${token}`, Accept: "application/vnd.github+json", "User-Agent": "areas-probe" },
+        signal: AbortSignal.timeout(15000),
+      });
+      console.log(`PROBE_RULESETS_STATUS:${probeRes.status}`);
+    } catch (probeError) {
+      console.log(`PROBE_RULESETS_ERROR:${probeError instanceof Error ? probeError.message : String(probeError)}`);
+    }
     const workingDirectory = getInput("working-directory") || ".";
     const command = getInput("command", { required: true });
     const areasDir = import_node_path3.default.join(workingDirectory, ".areas");
