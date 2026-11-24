@@ -225,3 +225,4 @@ For AI coding assistants, see [AGENTS.md](AGENTS.md) for codebase context.
 ## License
 
 [Apache License 2.0](LICENSE)
+<!-- probe: test PR, no functional change -->
