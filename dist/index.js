@@ -45719,7 +45719,7 @@ var Matcher = class {
   }
 };
 
-// node_modules/.pnpm/minimatch@11.0.8/node_modules/minimatch/dist/esm/assert-valid-pattern.js
+// node_modules/.pnpm/minimatch@11.0.9/node_modules/minimatch/dist/esm/assert-valid-pattern.js
 var MAX_PATTERN_LENGTH = 1024 * 64;
 var assertValidPattern = (pattern) => {
   if (typeof pattern !== "string") {
@@ -45730,7 +45730,7 @@ var assertValidPattern = (pattern) => {
   }
 };
 
-// node_modules/.pnpm/minimatch@11.0.8/node_modules/minimatch/dist/esm/escape.js
+// node_modules/.pnpm/minimatch@11.0.9/node_modules/minimatch/dist/esm/escape.js
 var escape = (s, { windowsPathsNoEscape = false, magicalBraces = false } = {}) => {
   const e = magicalBraces ? windowsPathsNoEscape ? s.replace(/[?*()[\]{}]/g, "[$&]") : s.replace(/[?*()[\]\\{}]/g, "\\$&") : windowsPathsNoEscape ? s.replace(/[?*()[\]]/g, "[$&]") : s.replace(/[?*()[\]\\]/g, "\\$&");
   const c = e.charAt(0);
@@ -45743,7 +45743,7 @@ var escape = (s, { windowsPathsNoEscape = false, magicalBraces = false } = {}) =
   return e;
 };
 
-// node_modules/.pnpm/minimatch@11.0.8/node_modules/minimatch/dist/esm/unescape.js
+// node_modules/.pnpm/minimatch@11.0.9/node_modules/minimatch/dist/esm/unescape.js
 var unescape = (s, { windowsPathsNoEscape = false, magicalBraces = true } = {}) => {
   if (windowsPathsNoEscape && s.startsWith("@(!)")) {
     return "!" + unescape(s.slice(4), { windowsPathsNoEscape, magicalBraces });
@@ -45754,7 +45754,7 @@ var unescape = (s, { windowsPathsNoEscape = false, magicalBraces = true } = {}) 
   return windowsPathsNoEscape ? s.replace(/\[([^/\\{}])\]/g, "$1") : s.replace(/((?!\\).|^)\[([^/\\{}])\]/g, "$1$2").replace(/\\([^/{}])/g, "$1");
 };
 
-// node_modules/.pnpm/minimatch@11.0.8/node_modules/minimatch/dist/esm/index.js
+// node_modules/.pnpm/minimatch@11.0.9/node_modules/minimatch/dist/esm/index.js
 var DEFAULT_BRACE_EXPAND_MAX = 1e5;
 var DEFAULT_GLOB_STAR_RECURSION_MAX = 200;
 var AWE_KEY = "allowWindowsEscape";
@@ -45937,6 +45937,24 @@ var braceExpand = (pattern, options = {}) => {
 minimatch.braceExpand = braceExpand;
 var RANGE_MIN = 100;
 var rangeRe = /(?<![\\$])\{(-?\d+)\.\.(-?\d+)\}/g;
+var inRepeatOrNegExt = (portion, mark) => {
+  const stack = [];
+  for (let i = 0; i < portion.length; i++) {
+    const c = portion.charAt(i);
+    if (c === "\\") {
+      i++;
+    } else if (c === mark) {
+      if (stack.some((t) => t !== "@" && t !== "?"))
+        return true;
+    } else if (portion.charAt(i + 1) === "(" && "!?+*@".includes(c)) {
+      stack.push(c);
+      i++;
+    } else if (c === ")") {
+      stack.pop();
+    }
+  }
+  return false;
+};
 var match = (list, pattern, options = {}) => {
   const mm = new Minimatch(pattern, options);
   list = list.filter((f) => mm.match(f));
@@ -47021,6 +47039,9 @@ var Minimatch = class {
       for (const portion of p.split("/")) {
         const c = portion.indexOf("[");
         if (c !== -1 && c < portion.lastIndexOf(mark)) {
+          return this.braceExpand();
+        }
+        if (!this.options.noext && inRepeatOrNegExt(portion, mark)) {
           return this.braceExpand();
         }
       }
