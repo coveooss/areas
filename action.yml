@@ -11,6 +11,10 @@ inputs:
     description: 'Working directory containing .areas folder'
     required: false
     default: '.'
+  branches:
+    description: 'Branches the area rulesets apply to, one per line: a branch name, a ref pattern such as refs/heads/release/*, or ~DEFAULT_BRANCH (ruleset-sync only)'
+    required: false
+    default: '~DEFAULT_BRANCH'
 runs:
   using: 'node20'
   main: 'dist/index.js'

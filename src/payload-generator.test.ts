@@ -139,4 +139,47 @@ describe("PayloadGenerator", () => {
 		expect(payload.rules[0].parameters.required_reviewers).toHaveLength(0);
 		expect(payload.bypass_actors).toHaveLength(0);
 	});
+
+	describe("branches", () => {
+		const config = {
+			name: "test-area",
+			reviewers: {},
+			file_patterns: ["*.ts"],
+		};
+
+		it("should target the default branch by default", () => {
+			const payload = new PayloadGenerator().generate(config, "coveo/test");
+
+			expect(payload.conditions.ref_name).toEqual({
+				exclude: [],
+				include: ["~DEFAULT_BRANCH"],
+			});
+		});
+
+		it("should target the given branches, as full refs and without duplicates", () => {
+			const generator = new PayloadGenerator([
+				"~DEFAULT_BRANCH",
+				" v3 ",
+				"refs/heads/v3",
+				"refs/heads/release/*",
+			]);
+
+			const payload = generator.generate(config, "coveo/test");
+
+			expect(payload.conditions.ref_name.include).toEqual([
+				"~DEFAULT_BRANCH",
+				"refs/heads/v3",
+				"refs/heads/release/*",
+			]);
+		});
+
+		it("should fall back to the default branch when every line is empty", () => {
+			const payload = new PayloadGenerator(["", "  "]).generate(
+				config,
+				"coveo/test",
+			);
+
+			expect(payload.conditions.ref_name.include).toEqual(["~DEFAULT_BRANCH"]);
+		});
+	});
 });

@@ -1,6 +1,25 @@
 import type { AreaConfig, RulesetPayload } from "./types.js";
 
+const DEFAULT_BRANCH = "~DEFAULT_BRANCH";
+
+export function toRefPattern(branch: string): string {
+	return branch.startsWith("~") || branch.startsWith("refs/")
+		? branch
+		: `refs/heads/${branch}`;
+}
+
 export class PayloadGenerator {
+	private readonly refPatterns: string[];
+
+	constructor(branches: string[] = []) {
+		const patterns = branches
+			.map((branch) => branch.trim())
+			.filter((branch) => branch !== "")
+			.map(toRefPattern);
+		this.refPatterns =
+			patterns.length > 0 ? [...new Set(patterns)] : [DEFAULT_BRANCH];
+	}
+
 	generate(config: AreaConfig, repository: string): RulesetPayload {
 		const requiredReviewers: RulesetPayload["rules"][0]["parameters"]["required_reviewers"] =
 			[];
@@ -27,7 +46,7 @@ export class PayloadGenerator {
 			conditions: {
 				ref_name: {
 					exclude: [],
-					include: ["~DEFAULT_BRANCH"],
+					include: [...this.refPatterns],
 				},
 			},
 			rules: [

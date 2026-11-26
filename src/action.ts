@@ -11,6 +11,7 @@ async function run() {
 		const token = core.getInput("token", { required: true });
 		const workingDirectory = core.getInput("working-directory") || ".";
 		const command = core.getInput("command", { required: true });
+		const branches = core.getMultilineInput("branches");
 		const areasDir = path.join(workingDirectory, ".areas");
 
 		const octokit = github.getOctokit(token);
@@ -20,7 +21,7 @@ async function run() {
 		const configurationReader = new ConfigurationReader(areasDir, teamResolver);
 
 		if (command === "ruleset-sync") {
-			await rulesetSync(octokit, owner, repo, configurationReader);
+			await rulesetSync(octokit, owner, repo, configurationReader, branches);
 		} else if (command === "label-pr") {
 			await labelPr(octokit, owner, repo, configurationReader);
 		} else {

@@ -96,6 +96,19 @@ See [GitHub's documentation](https://docs.github.com/en/repositories/configuring
 | `token` | GitHub Token (PAT with `administration:write`, `members:read`, `contents:read`, `pull_requests:write`, `issues:write`). | `true` | N/A |
 | `command` | The mode to run: `ruleset-sync` or `label-pr`. | `true` | N/A |
 | `working-directory` | Path containing the `.areas` folder. | `false` | `.` |
+| `branches` | Branches the area rulesets apply to, one per line: a branch name such as `v3`, a ref pattern such as `refs/heads/release/*`, or `~DEFAULT_BRANCH`. Used by `ruleset-sync`. | `false` | `~DEFAULT_BRANCH` |
+
+For example, to apply the area rules to a maintenance branch as well as the default branch:
+
+```yaml
+      - uses: coveooss/areas@v0 # REPLACE ME
+        with:
+          token: ${{ secrets.TOKEN }}
+          command: ruleset-sync
+          branches: |
+            ~DEFAULT_BRANCH
+            v3
+```
 
 ## Installation
 

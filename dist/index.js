@@ -44588,6 +44588,13 @@ function getInput(name, options) {
   }
   return val.trim();
 }
+function getMultilineInput(name, options) {
+  const inputs = getInput(name, options).split("\n").filter((x) => x !== "");
+  if (options && options.trimWhitespace === false) {
+    return inputs;
+  }
+  return inputs.map((input) => input.trim());
+}
 function setFailed(message) {
   process.exitCode = ExitCode.Failure;
   error(message);
@@ -47253,7 +47260,16 @@ async function labelPr(octokit, owner, repo, configurationReader) {
 }
 
 // src/payload-generator.ts
+var DEFAULT_BRANCH = "~DEFAULT_BRANCH";
+function toRefPattern(branch) {
+  return branch.startsWith("~") || branch.startsWith("refs/") ? branch : `refs/heads/${branch}`;
+}
 var PayloadGenerator = class {
+  refPatterns;
+  constructor(branches = []) {
+    const patterns = branches.map((branch) => branch.trim()).filter((branch) => branch !== "").map(toRefPattern);
+    this.refPatterns = patterns.length > 0 ? [...new Set(patterns)] : [DEFAULT_BRANCH];
+  }
   generate(config, repository) {
     const requiredReviewers = [];
     if (config.reviewers) {
@@ -47277,7 +47293,7 @@ var PayloadGenerator = class {
       conditions: {
         ref_name: {
           exclude: [],
-          include: ["~DEFAULT_BRANCH"]
+          include: [...this.refPatterns]
         }
       },
       rules: [
@@ -47352,8 +47368,8 @@ var RulesetManager = class {
 };
 
 // src/commands/ruleset-sync.ts
-async function rulesetSync(octokit, owner, repo, configurationReader) {
-  const payloadGenerator = new PayloadGenerator();
+async function rulesetSync(octokit, owner, repo, configurationReader, branches = []) {
+  const payloadGenerator = new PayloadGenerator(branches);
   const rulesetManager = new RulesetManager(octokit, owner, repo);
   const configs = await configurationReader.readConfigurations();
   const activeAreaNames = new Set(
@@ -54168,13 +54184,14 @@ async function run() {
     const token = getInput("token", { required: true });
     const workingDirectory = getInput("working-directory") || ".";
     const command = getInput("command", { required: true });
+    const branches = getMultilineInput("branches");
     const areasDir = import_node_path3.default.join(workingDirectory, ".areas");
     const octokit = github2.getOctokit(token);
     const { owner, repo } = github2.context.repo;
     const teamResolver = new TeamResolver(octokit, owner);
     const configurationReader = new ConfigurationReader(areasDir, teamResolver);
     if (command === "ruleset-sync") {
-      await rulesetSync(octokit, owner, repo, configurationReader);
+      await rulesetSync(octokit, owner, repo, configurationReader, branches);
     } else if (command === "label-pr") {
       await labelPr(octokit, owner, repo, configurationReader);
     } else {

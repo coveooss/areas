@@ -8,8 +8,9 @@ export async function rulesetSync(
 	owner: string,
 	repo: string,
 	configurationReader: ConfigurationReader,
+	branches: string[] = [],
 ): Promise<void> {
-	const payloadGenerator = new PayloadGenerator();
+	const payloadGenerator = new PayloadGenerator(branches);
 	const rulesetManager = new RulesetManager(octokit, owner, repo);
 
 	// Read area configurations
